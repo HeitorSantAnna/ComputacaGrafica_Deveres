@@ -389,6 +389,7 @@ GameObject:
   - component: {fileID: 2079721482}
   - component: {fileID: 2079721481}
   - component: {fileID: 2079721480}
+  - component: {fileID: 2079721484}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -408,9 +409,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f6f88f00119e9a458c4d71329c36f82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: 3
+  gridSize: 10
   cellSize: 1
-  gridOffset: {x: 0, y: 0, z: 0}
+  height: 0
 --- !u!23 &2079721481
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -479,6 +480,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2079721484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079721479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9a21b7d61095c8fdbe76c39b46bb48d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ale: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

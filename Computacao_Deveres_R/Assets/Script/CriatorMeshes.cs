@@ -1,19 +1,27 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CriatorMeshes : MonoBehaviour
 {
+    #region Variaveis
     Mesh mesh;
-
-    Vector3[] zone;
 
     [SerializeField] int gridSize;
 
     [SerializeField] int cellSize = 1;
 
-    [SerializeField] Vector3 gridOffset;
+    Vector3 gridOffset;
 
     int[] triangles;
+
+    Vector3[] vertices;
+
+    float time = 0.0f;
+
+    [Range(0, 1)]
+    [SerializeField] float height;
+    #endregion
 
     //Para que um pedaço de mesh/malha seja criado, você precisa de ter 3 pontos, um Vector3/Vetor de 3 pontos e numerar qual é a ordem de renderinização da mesh
 
@@ -28,47 +36,80 @@ public class CriatorMeshes : MonoBehaviour
         CreateMesh();
     }
 
-    public void SetPosition(InputAction.CallbackContext value)
+    void Update()
     {
-        if(!value.performed)
+        int v = 0;
+
+        time += Time.deltaTime;
+
+        for (int x = 0; x <= gridSize; x++)
         {
-            return;
+            for (int y = 0; y <= gridSize; y++)
+            {
+                float h = Mathf.Sin(x / (float)gridSize * 2 * Mathf.PI + time) * height;
+
+                vertices[v] = new Vector3(x * cellSize, h, y * cellSize);
+
+                v++;
+            }
         }
+
+        CreateMesh();
     }
 
     void MakeProcGrid()
     {
-        zone = new Vector3[gridSize * gridSize * 4];
-        triangles = new int[gridSize * gridSize * 6];
-        int v = 0, t = 0;
-        float vertexOffset = cellSize * 0.5f;
+        CreateVertices();
+        CreateTriangles();
+    }
 
-        for(int x = 0; x < gridSize; x++)
+    void CreateVertices()
+    {
+        //Aqui será creiado os vertices, vamos definir um vector3 com uma única conta que será o valor de todos, depois criar um for que fará a posição dos vertices
+
+        int v = 0;
+
+        vertices = new Vector3[((gridSize + 1) * (gridSize + 1))];
+
+        for (int x = 0; x <= gridSize; x++)
         {
-            for(int y = 0; y < gridSize; y++)
+            for (int y = 0; y <= gridSize; y++)
             {
-                Vector3 cellOffset = new Vector3(x * cellSize, 0, y * cellSize);
-                zone[v] = new Vector3(-vertexOffset, 0, -vertexOffset) + cellOffset + gridOffset;
-                zone[v+1] = new Vector3(-vertexOffset, 0, vertexOffset) + cellOffset + gridOffset;
-                zone[v+2] = new Vector3( vertexOffset, 0, -vertexOffset) + cellOffset + gridOffset;
-                zone[v+3] = new Vector3( vertexOffset, 0, vertexOffset) + cellOffset + gridOffset;
-                triangles[t + 0] = v;
-                triangles[t + 1] = triangles[t + 4] = v + 1;
-                triangles[t + 2] = triangles[t + 3] = v + 2;
-                triangles[t + 5] = v + 3;
-                v += 4;
-                t += 6;
+                vertices[v] = new Vector3(x * cellSize, 0, y * cellSize);
+
+                v++;
             }
         }
     }
 
-    //Para que o código fique com a animação do professor é necessário uma função de remodele o calculo da posição dos triangulos e no Update vai chamar essa função e fazer a alteração da posição dos triangulos
+    void CreateTriangles()
+    {
+        int v = 0, t = 0;
+        triangles = new int[6 * gridSize * gridSize];
+        for (int x = 0; x < gridSize; x++)
+        {
+            for (int y = 0; y < gridSize; y++)
+            {
+                triangles[t] = v;
+                triangles[t + 1] = v + 1;
+                triangles[t + 2] = v + (gridSize + 1);
+                triangles[t + 4] = v + 1;
+                triangles[t + 3] = v + (gridSize + 1);
+                triangles[t + 5] = v + (gridSize + 1) + 1;
+                v++;
+                t += 6;
+            }
+            v++;
+        }
+    }
 
     void CreateMesh()
     {
         mesh.Clear();
-        mesh.vertices = zone;
+        mesh.vertices = vertices;
         mesh.triangles = triangles;
+
+        mesh.RecalculateTangents();
         mesh.RecalculateNormals();
     }
 }
