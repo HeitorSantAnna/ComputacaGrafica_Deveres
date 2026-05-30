@@ -1,6 +1,4 @@
-using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class CriatorMeshes : MonoBehaviour
 {
@@ -11,19 +9,18 @@ public class CriatorMeshes : MonoBehaviour
 
     [SerializeField] int cellSize = 1;
 
-    Vector3 gridOffset;
+    public float Offsetx, Offsety;
 
     int[] triangles;
 
     Vector3[] vertices;
 
-    float time = 0.0f;
-
-    [Range(0, 1)]
-    [SerializeField] float height;
+    [SerializeField] float height = 1;
     #endregion
 
     //Para que um pedaço de mesh/malha seja criado, você precisa de ter 3 pontos, um Vector3/Vetor de 3 pontos e numerar qual é a ordem de renderinização da mesh
+
+    //Acho que entendi o meu erro, estou mandando aplicar a textura do normal map, mas não estou mandano os vertices se moverem, acho que como foi gerado via código  os tries, eles dependam de comandos escritos, valeu chatGPT
 
     void Awake()
     {
@@ -38,23 +35,7 @@ public class CriatorMeshes : MonoBehaviour
 
     void Update()
     {
-        int v = 0;
-
-        time += Time.deltaTime;
-
-        for (int x = 0; x <= gridSize; x++)
-        {
-            for (int y = 0; y <= gridSize; y++)
-            {
-                float h = Mathf.Sin(x / (float)gridSize * 2 * Mathf.PI + time) * height;
-
-                vertices[v] = new Vector3(x * cellSize, h, y * cellSize);
-
-                v++;
-            }
-        }
-
-        CreateMesh();
+        CreateNormal();
     }
 
     void MakeProcGrid()
@@ -111,5 +92,46 @@ public class CriatorMeshes : MonoBehaviour
 
         mesh.RecalculateTangents();
         mesh.RecalculateNormals();
+    }
+
+    void CreateNormal()
+    {
+        int v = 0;
+
+        Texture2D hei = new Texture2D(gridSize, gridSize);
+
+        for(int i = 0; i <= gridSize; i++)
+        {
+            for(int j = 0; j <= gridSize; j++)
+            {
+                float xCoord = i / (float)gridSize * height + Offsetx;
+                float yCoord = j / (float)gridSize * height + Offsety;
+
+                float sample = Mathf.PerlinNoise(xCoord, yCoord);
+
+                hei.SetPixel(i, j, new Color(sample, sample, sample));
+            }
+        }
+
+        hei.Apply();
+
+        for(int x = 0; x <= gridSize; x++)
+        {
+            for(int y = 0; y <= gridSize; y++)
+            {
+                float u = x / (float)gridSize;
+                float t = y / (float)gridSize;
+
+                Color pixel = hei.GetPixelBilinear(u, t);
+
+                float h = pixel.grayscale * height;
+
+                vertices[v] = new Vector3(x * cellSize, h, y * cellSize);
+
+                v++;
+            }
+        }
+
+        CreateMesh();
     }
 }

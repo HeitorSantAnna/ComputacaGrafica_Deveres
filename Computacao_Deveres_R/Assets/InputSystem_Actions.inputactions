@@ -2,56 +2,6 @@
     "name": "InputSystem_Actions",
     "maps": [
         {
-            "name": "Selector",
-            "id": "68e87729-903e-4c5b-b195-fd1d58f8696b",
-            "actions": [
-                {
-                    "name": "Position",
-                    "type": "Value",
-                    "id": "f05208c3-6be3-4a7f-a2a1-422e2f4906aa",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "SetPosition",
-                    "id": "e20906da-daa5-4fa2-8190-eef540247c1c",
-                    "path": "OneModifier",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Position",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "modifier",
-                    "id": "fc7edf80-ebad-4554-b7e7-3ed422f12752",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Position",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "binding",
-                    "id": "257ef2da-4daa-4eb8-b17c-6b8c05af1cc8",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Position",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                }
-            ]
-        },
-        {
             "name": "Player",
             "id": "6b6f6e0a-8f7d-41d5-8222-7f1fadc23ab1",
             "actions": [

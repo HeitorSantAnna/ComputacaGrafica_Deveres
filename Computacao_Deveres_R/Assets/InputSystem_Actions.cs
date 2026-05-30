@@ -88,56 +88,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     ""name"": ""InputSystem_Actions"",
     ""maps"": [
         {
-            ""name"": ""Selector"",
-            ""id"": ""68e87729-903e-4c5b-b195-fd1d58f8696b"",
-            ""actions"": [
-                {
-                    ""name"": ""Position"",
-                    ""type"": ""Value"",
-                    ""id"": ""f05208c3-6be3-4a7f-a2a1-422e2f4906aa"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": ""SetPosition"",
-                    ""id"": ""e20906da-daa5-4fa2-8190-eef540247c1c"",
-                    ""path"": ""OneModifier"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Position"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""modifier"",
-                    ""id"": ""fc7edf80-ebad-4554-b7e7-3ed422f12752"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Position"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""binding"",
-                    ""id"": ""257ef2da-4daa-4eb8-b17c-6b8c05af1cc8"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Position"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                }
-            ]
-        },
-        {
             ""name"": ""Player"",
             ""id"": ""6b6f6e0a-8f7d-41d5-8222-7f1fadc23ab1"",
             ""actions"": [
@@ -328,9 +278,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         }
     ]
 }");
-        // Selector
-        m_Selector = asset.FindActionMap("Selector", throwIfNotFound: true);
-        m_Selector_Position = m_Selector.FindAction("Position", throwIfNotFound: true);
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
@@ -338,7 +285,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
 
     ~@InputSystem_Actions()
     {
-        UnityEngine.Debug.Assert(!m_Selector.enabled, "This will cause a leak and performance issues, InputSystem_Actions.Selector.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, InputSystem_Actions.Player.Disable() has not been called.");
     }
 
@@ -411,102 +357,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     {
         return asset.FindBinding(bindingMask, out action);
     }
-
-    // Selector
-    private readonly InputActionMap m_Selector;
-    private List<ISelectorActions> m_SelectorActionsCallbackInterfaces = new List<ISelectorActions>();
-    private readonly InputAction m_Selector_Position;
-    /// <summary>
-    /// Provides access to input actions defined in input action map "Selector".
-    /// </summary>
-    public struct SelectorActions
-    {
-        private @InputSystem_Actions m_Wrapper;
-
-        /// <summary>
-        /// Construct a new instance of the input action map wrapper class.
-        /// </summary>
-        public SelectorActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "Selector/Position".
-        /// </summary>
-        public InputAction @Position => m_Wrapper.m_Selector_Position;
-        /// <summary>
-        /// Provides access to the underlying input action map instance.
-        /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Selector; }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
-        public void Enable() { Get().Enable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
-        public void Disable() { Get().Disable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
-        public bool enabled => Get().enabled;
-        /// <summary>
-        /// Implicitly converts an <see ref="SelectorActions" /> to an <see ref="InputActionMap" /> instance.
-        /// </summary>
-        public static implicit operator InputActionMap(SelectorActions set) { return set.Get(); }
-        /// <summary>
-        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <param name="instance">Callback instance.</param>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
-        /// </remarks>
-        /// <seealso cref="SelectorActions" />
-        public void AddCallbacks(ISelectorActions instance)
-        {
-            if (instance == null || m_Wrapper.m_SelectorActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_SelectorActionsCallbackInterfaces.Add(instance);
-            @Position.started += instance.OnPosition;
-            @Position.performed += instance.OnPosition;
-            @Position.canceled += instance.OnPosition;
-        }
-
-        /// <summary>
-        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <remarks>
-        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
-        /// </remarks>
-        /// <seealso cref="SelectorActions" />
-        private void UnregisterCallbacks(ISelectorActions instance)
-        {
-            @Position.started -= instance.OnPosition;
-            @Position.performed -= instance.OnPosition;
-            @Position.canceled -= instance.OnPosition;
-        }
-
-        /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="SelectorActions.UnregisterCallbacks(ISelectorActions)" />.
-        /// </summary>
-        /// <seealso cref="SelectorActions.UnregisterCallbacks(ISelectorActions)" />
-        public void RemoveCallbacks(ISelectorActions instance)
-        {
-            if (m_Wrapper.m_SelectorActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        /// <summary>
-        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
-        /// </summary>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
-        /// </remarks>
-        /// <seealso cref="SelectorActions.AddCallbacks(ISelectorActions)" />
-        /// <seealso cref="SelectorActions.RemoveCallbacks(ISelectorActions)" />
-        /// <seealso cref="SelectorActions.UnregisterCallbacks(ISelectorActions)" />
-        public void SetCallbacks(ISelectorActions instance)
-        {
-            foreach (var item in m_Wrapper.m_SelectorActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_SelectorActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    /// <summary>
-    /// Provides a new <see cref="SelectorActions" /> instance referencing this action map.
-    /// </summary>
-    public SelectorActions @Selector => new SelectorActions(this);
 
     // Player
     private readonly InputActionMap m_Player;
@@ -667,21 +517,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             if (m_XRSchemeIndex == -1) m_XRSchemeIndex = asset.FindControlSchemeIndex("XR");
             return asset.controlSchemes[m_XRSchemeIndex];
         }
-    }
-    /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Selector" which allows adding and removing callbacks.
-    /// </summary>
-    /// <seealso cref="SelectorActions.AddCallbacks(ISelectorActions)" />
-    /// <seealso cref="SelectorActions.RemoveCallbacks(ISelectorActions)" />
-    public interface ISelectorActions
-    {
-        /// <summary>
-        /// Method invoked when associated input action "Position" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnPosition(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Player" which allows adding and removing callbacks.
